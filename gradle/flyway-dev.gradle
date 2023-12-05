@@ -1,0 +1,22 @@
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.flywaydb:flyway-database-postgresql:10.1.0"
+    }
+}
+
+dependencies {
+    runtimeOnly 'org.flywaydb:flyway-database-postgresql:10.1.0'
+    implementation 'org.flywaydb:flyway-core:10.1.0'
+
+
+}
+
+flyway {
+    url = 'jdbc:postgresql://localhost:5432/demo'
+    user = 'postgres'
+    password = 'hung'
+}

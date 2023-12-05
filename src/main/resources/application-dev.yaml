@@ -1,0 +1,5 @@
+spring:
+  flyway:
+    url: jdbc:postgresql://localhost:5432/demo
+    user: postgres
+    password: hung

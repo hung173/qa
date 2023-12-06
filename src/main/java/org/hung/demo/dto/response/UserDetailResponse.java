@@ -10,5 +10,5 @@ public class UserDetailResponse {
     private String username;
     private String firstName;
     private String lastName;
-//    private List<String> authorities;
+    private List<String> authorities;
 }

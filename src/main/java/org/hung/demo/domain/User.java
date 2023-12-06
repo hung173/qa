@@ -8,7 +8,9 @@ import org.hibernate.annotations.BatchSize;
 import org.hung.demo.model.UserStatus;
 import org.hung.demo.model.UserType;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -54,5 +56,5 @@ public class User extends AbstractAuditingEntity<Long> {
             joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") },
             inverseJoinColumns = { @JoinColumn(name = "authority_name", referencedColumnName = "name") }
     )
-    private Set<Authority> authorities = new HashSet<>();
+    private List<Authority> authorities = new ArrayList<>();
 }

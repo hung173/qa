@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +25,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
@@ -61,6 +63,10 @@ public class AuthorizationServerConfig {
     }
 
 
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder(12);
+//    }
     @Bean
     public AuthenticationManager authenticationManager() {
         var provider = new DaoAuthenticationProvider();
@@ -93,8 +99,6 @@ public class AuthorizationServerConfig {
         http
                 .cors(withDefaults())
                 .csrf(csrf -> csrf.disable())
-//                .addFilterAfter(new SpaWebFilter(), BasicAuthenticationFilter.class)
-//                .addFilterAfter(new CookieCsrfFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(authz ->
                         // prettier-ignore
                         authz
@@ -116,9 +120,7 @@ public class AuthorizationServerConfig {
 //                                .requestMatchers(mvc.pattern("/api/users/**")).permitAll()
                                 .requestMatchers(mvc.pattern("/**")).permitAll()
                 )
-//                .oauth2Login(withDefaults())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(authenticationConverter())));
-//                .oauth2Client(Customizer.withDefaults());
         return http.build();
     }
 
@@ -154,8 +156,33 @@ public class AuthorizationServerConfig {
     }
 
 //    @Bean
-//    JwtDecoder jwtDecoder() {
-//        NimbusJwtDecoder jwtDecoder =  NimbusJwtDecoder.
-//        return jwtDecoder;
+//    public JwtDecoder jwtDecoder( final ResourceLoader resourceLoader) throws Exception {
+//        // this workaround is needed because spring boot doesn't support loading jwks from classpath/file (only http/https)
+//        // using standard 'spring.security.oauth2.resourceserver.jwt.jwk-set-uri' configuration property
+//        // relevant issue: https://github.com/spring-projects/spring-security/issues/8092
+//        final String issuerUri = properties.getJwt().getIssuerUri();
+//        final String jwkSetUri = properties.getJwt().getJwkSetUri();
+//        final JWSAlgorithm jwsAlgorithm = JWSAlgorithm.parse(properties.getJwt().getJwsAlgorithm());
+//
+//        final InputStream inputStream = resourceLoader.getResource(jwkSetUri).getInputStream();
+//        final JWKSet jwkSet = JWKSet.load(inputStream);
+//        final JWKSource<SecurityContext> jwkSource = new ImmutableJWKSet<>(jwkSet);
+//        final ConfigurableJWTProcessor<SecurityContext> jwtProcessor = new DefaultJWTProcessor<>();
+//        final JWSKeySelector<SecurityContext> jwsKeySelector = new JWSVerificationKeySelector<>(jwsAlgorithm, jwkSource);
+//        jwtProcessor.setJWSKeySelector(jwsKeySelector);
+//
+//        // Spring Security validates the claim set independent from Nimbus
+//        // copied from 'org.springframework.security.oauth2.jwt.NimbusJwtDecoder.JwkSetUriJwtDecoderBuilder.processor'
+//        jwtProcessor.setJWTClaimsSetVerifier((claims, context) -> {
+//        });
+//
+//        final OAuth2TokenValidator<Jwt> defaultValidator = JwtValidators.createDefaultWithIssuer(issuerUri);
+//        final OAuth2TokenValidator<Jwt> clientIdValidator = new JwtClaimValidator<String>(CLIENT_ID_CLAIM, value -> !value.trim().isEmpty());
+//        final OAuth2TokenValidator<Jwt> combinedValidator = new DelegatingOAuth2TokenValidator<>(defaultValidator, clientIdValidator);
+//
+//        final NimbusJwtDecoder nimbusJwtDecoder = new NimbusJwtDecoder(jwtProcessor);
+//        nimbusJwtDecoder.setJwtValidator(combinedValidator);
+//
+//        return nimbusJwtDecoder;
 //    }
 }

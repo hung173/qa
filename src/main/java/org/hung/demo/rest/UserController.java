@@ -28,7 +28,7 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    public StandardResponse<UserDetailResponse> getUserDetail(@PathVariable String username) {
+    public StandardResponse<UserDetailResponse> getUserDetail(@PathVariable(name = "username") String username) {
         return StandardResponse.success(userService.getUserDetail(username));
     }
 

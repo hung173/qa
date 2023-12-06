@@ -1,10 +1,9 @@
 package org.hung.demo.dto.request;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class CreateUserRequest {
@@ -14,9 +13,15 @@ public class CreateUserRequest {
     @Pattern(regexp = "^[a-zA-Z0-9._-]{3,}$")
     private String username;
 
+    private String password;
+
     @NotBlank
     @Email
     private String email;
+
     private String firstName;
     private String lastName;
+
+    @NotEmpty
+    private List<String> authorities;
 }

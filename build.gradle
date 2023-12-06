@@ -31,7 +31,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-jooq'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-authorization-server'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-//	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation "jakarta.annotation:jakarta.annotation-api"
 	implementation "com.fasterxml.jackson.module:jackson-module-jaxb-annotations"
@@ -50,6 +50,9 @@ dependencies {
 	implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.1'
 
 	implementation 'javax.xml.bind:jaxb-api:2.3.1'
+
+	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 
 
 }

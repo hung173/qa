@@ -6,8 +6,9 @@ CREATE TABLE users(
                       last_name  varchar NULL,
                       email      varchar NULL,
                       user_type  varchar NULL,
+                      status  varchar NOT NULL DEFAULT 'ACTIVE',
                       is_active boolean NOT NULL DEFAULT true,
-                      created_by varchar(50) NOT NULL,
+                      created_by varchar(50) NULL,
                       created_date timestamp NULL,
                       last_modified_by varchar(50) NULL,
                       last_modified_date timestamp NULL,
@@ -31,3 +32,5 @@ CREATE TABLE user_authority
 );
 
 INSERT INTO authority ("name") VALUES('USER'),('ADMIN');
+INSERT INTO public.users (username,"password",first_name,last_name,email,user_type,status,is_active,created_by,created_date,last_modified_by,last_modified_date) VALUES
+    ('admin','$2a$12$IXGFMoGXC6v4BVSllNH3Z.9hE.24K5K2k70XQt7HOK0/HEjI.Eo8.','admin','admin','admin@admin.com','LOCAL','ACTIVE',true,'admin',NULL,NULL,NULL);

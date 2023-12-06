@@ -2,8 +2,10 @@ package org.hung.demo.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.annotations.BatchSize;
+import org.hung.demo.model.UserStatus;
 import org.hung.demo.model.UserType;
 
 import java.util.HashSet;
@@ -14,6 +16,7 @@ import java.util.Set;
 public class User extends AbstractAuditingEntity<Long> {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "username")
@@ -36,7 +39,13 @@ public class User extends AbstractAuditingEntity<Long> {
     private UserType userType;
 
     @Column(name = "is_active")
-    private Boolean active;
+    @NotNull
+    private Boolean active = Boolean.TRUE;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private UserStatus status = UserStatus.ACTIVE;
 
     @JsonIgnore
     @ManyToMany
@@ -45,6 +54,5 @@ public class User extends AbstractAuditingEntity<Long> {
             joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") },
             inverseJoinColumns = { @JoinColumn(name = "authority_name", referencedColumnName = "name") }
     )
-    @BatchSize(size = 20)
     private Set<Authority> authorities = new HashSet<>();
 }

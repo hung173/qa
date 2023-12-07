@@ -48,12 +48,12 @@ public class PasswordGrantAuthenticationProvider implements AuthenticationProvid
         }
 
         // TODO Validate the code parameter
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(customCodeGrantAuthentication.getUsername(), customCodeGrantAuthentication.getPassword()));
+        var userAuthentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(customCodeGrantAuthentication.getUsername(), customCodeGrantAuthentication.getPassword()));
 
         // Generate the access token
         OAuth2TokenContext tokenContext = DefaultOAuth2TokenContext.builder()
                 .registeredClient(registeredClient)
-                .principal(clientPrincipal)
+                .principal(userAuthentication)
                 .authorizationServerContext(AuthorizationServerContextHolder.getContext())
                 .tokenType(OAuth2TokenType.ACCESS_TOKEN)
                 .authorizationGrantType(customCodeGrantAuthentication.getGrantType())

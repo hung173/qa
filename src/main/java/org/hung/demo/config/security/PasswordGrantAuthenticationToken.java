@@ -1,9 +1,11 @@
 package org.hung.demo.config.security;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationGrantAuthenticationToken;
 
+import java.util.Collection;
 import java.util.Map;
 
 public class PasswordGrantAuthenticationToken extends OAuth2AuthorizationGrantAuthenticationToken {
@@ -14,7 +16,8 @@ public class PasswordGrantAuthenticationToken extends OAuth2AuthorizationGrantAu
     protected PasswordGrantAuthenticationToken(String username,
                                                String password,
                                                Authentication clientPrincipal,
-                                               Map<String, Object> additionalParameters) {
+                                               Map<String, Object> additionalParameters
+                                               ) {
         super(new AuthorizationGrantType("password"), clientPrincipal, additionalParameters);
         this.password = password;
         this.username = username;

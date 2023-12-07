@@ -3,7 +3,6 @@ package org.hung.demo.config.security;
 import jakarta.servlet.http.HttpServletRequest;
 import org.hung.demo.domain.User;
 import org.hung.demo.repository.UserRepository;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,10 +32,9 @@ public class PasswordGrantAuthenticationConverter implements AuthenticationConve
         Optional<User> userOpt = userRepository.findByUsername(username);
 
         if (userOpt.isPresent()) {
-//            var user = userOpt.get();
-//            var userAuthorities = user.getAuthorities().stream().map(authority -> new SimpleGrantedAuthority(authority.getName())).collect(
-//                    Collectors.toList());
-            var userAuthorities = Arrays.asList(new SimpleGrantedAuthority("ADMIN"));
+            var user = userOpt.get();
+            var userAuthorities = user.getAuthorities().stream().map(authority -> new SimpleGrantedAuthority(authority.getName())).collect(
+                    Collectors.toList());
             var clientPrincipal = SecurityContextHolder.getContext().getAuthentication();
             return new PasswordGrantAuthenticationToken(username, password, clientPrincipal, null);
         }

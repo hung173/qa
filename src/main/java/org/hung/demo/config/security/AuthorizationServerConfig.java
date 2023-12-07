@@ -17,6 +17,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
@@ -33,8 +34,10 @@ import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.oauth2.server.authorization.InMemoryOAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.token.*;
@@ -51,6 +54,7 @@ import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
+import javax.sql.DataSource;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -149,8 +153,9 @@ public class AuthorizationServerConfig {
     }
 
     @Bean
-    public OAuth2AuthorizationService authorizationService() {
-        return new InMemoryOAuth2AuthorizationService();
+    public JdbcOAuth2AuthorizationService authorizationService(DataSource dataSource,
+                                                               RegisteredClientRepository registeredClientRepository) {
+        return new JdbcAuthenticationService(new JdbcTemplate(dataSource), registeredClientRepository);
     }
 
     @Bean

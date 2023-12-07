@@ -1,5 +1,6 @@
 package org.hung.demo.config.security;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,6 +18,7 @@ import org.springframework.security.oauth2.server.authorization.token.DefaultOAu
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
 
+@Slf4j
 public class PasswordGrantAuthenticationProvider implements AuthenticationProvider {
 
     private final OAuth2AuthorizationService authorizationService;
@@ -48,7 +50,9 @@ public class PasswordGrantAuthenticationProvider implements AuthenticationProvid
         }
 
         // TODO Validate the code parameter
-        var userAuthentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(customCodeGrantAuthentication.getUsername(), customCodeGrantAuthentication.getPassword()));
+        var userAuthentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                customCodeGrantAuthentication.getUsername(),
+                customCodeGrantAuthentication.getPassword()));
 
         // Generate the access token
         OAuth2TokenContext tokenContext = DefaultOAuth2TokenContext.builder()
@@ -96,7 +100,6 @@ public class PasswordGrantAuthenticationProvider implements AuthenticationProvid
         return PasswordGrantAuthenticationToken.class.isAssignableFrom(authentication);
     }
 
-    // @fold:on
     private static OAuth2ClientAuthenticationToken getAuthenticatedClientElseThrowInvalidClient(Authentication authentication) {
         OAuth2ClientAuthenticationToken clientPrincipal = null;
         if (OAuth2ClientAuthenticationToken.class.isAssignableFrom(authentication.getPrincipal().getClass())) {
@@ -107,6 +110,5 @@ public class PasswordGrantAuthenticationProvider implements AuthenticationProvid
         }
         throw new OAuth2AuthenticationException(OAuth2ErrorCodes.INVALID_CLIENT);
     }
-    // @fold:off
 
 }

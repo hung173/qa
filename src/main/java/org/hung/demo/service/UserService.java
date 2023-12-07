@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hung.demo.dto.request.CreateUserRequest;
 import org.hung.demo.dto.response.UserDetailResponse;
 import org.hung.demo.dto.response.UserListResponse;
+import org.hung.demo.dto.response.UserReportResponse;
 import org.hung.demo.exceptions.BadRequestException;
 import org.hung.demo.exceptions.ErrorCode;
 import org.hung.demo.exceptions.ResourceNotFoundException;
@@ -31,8 +32,8 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository
-            , UserMapper userMapper,
+    public UserService(UserRepository userRepository,
+                       UserMapper userMapper,
                        AuthorityRepository authorityRepository) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
@@ -53,7 +54,7 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
     }
 
-    public UserDetailResponse createUser (CreateUserRequest createUserRequest) {
+    public UserDetailResponse createUser(CreateUserRequest createUserRequest) {
         var authorities = authorityRepository.findByNameIn(createUserRequest.getAuthorities());
         if (authorities.size() != createUserRequest.getAuthorities().size()) {
             throw new BadRequestException("invalid authority");
@@ -67,5 +68,9 @@ public class UserService {
 
     public void deleteUser(String username) {
         userRepository.deleteByUsername(username);
+    }
+
+    public List<UserReportResponse> reportUser() {
+        return userRepository.reportUser();
     }
 }

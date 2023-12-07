@@ -1,8 +1,10 @@
+import nu.studer.gradle.jooq.JooqEdition
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.2.0'
 	id 'io.spring.dependency-management' version '1.1.4'
 	id "org.flywaydb.flyway" version "10.1.0"
+	id 'nu.studer.jooq' version '8.2'
 }
 
 group = 'org.hung'
@@ -23,6 +25,7 @@ repositories {
 }
 
 apply from: "gradle/flyway-dev.gradle"
+apply from: "gradle/jooq.gradle"
 
 dependencies {
 	implementation "org.springframework.boot:spring-boot-starter-data-jpa"
@@ -54,9 +57,60 @@ dependencies {
 	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
 	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 
-
+	jooqGenerator 'org.postgresql:postgresql:42.5.1'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+jooq {
+	version = '3.18.2'  // default (can be omitted)
+	edition = nu.studer.gradle.jooq.JooqEdition.OSS  // default (can be omitted)
+
+	configurations {
+		main {  // name of the jOOQ configuration
+			generateSchemaSourceOnCompilation = true  // default (can be omitted)
+
+			generationTool {
+//				logging = Logging.WARN
+				jdbc {
+					driver = 'org.postgresql.Driver'
+					url = 'jdbc:postgresql://localhost:5432/demo'
+					user = 'postgres'
+					password = 'hung'
+				}
+				generator {
+					name = 'org.jooq.codegen.DefaultGenerator'
+					database {
+						name = 'org.jooq.meta.postgres.PostgresDatabase'
+						inputSchema = 'public'
+						forcedTypes {
+							forcedType {
+								name = 'varchar'
+								includeExpression = '.*'
+								includeTypes = 'JSONB?'
+							}
+							forcedType {
+								name = 'varchar'
+								includeExpression = '.*'
+								includeTypes = 'INET'
+							}
+						}
+					}
+					generate {
+						deprecated = false
+						records = true
+						immutablePojos = true
+						fluentSetters = true
+					}
+					target {
+						packageName = 'org.hung.demo'
+						directory = 'build/generated-src/jooq/main'  // default (can be omitted)
+					}
+					strategy.name = 'org.jooq.codegen.DefaultGeneratorStrategy'
+				}
+			}
+		}
+	}
 }

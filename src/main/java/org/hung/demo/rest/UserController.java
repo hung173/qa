@@ -1,14 +1,20 @@
 package org.hung.demo.rest;
 
 import jakarta.validation.Valid;
+import org.hung.demo.config.security.SecurityUtils;
 import org.hung.demo.dto.request.CreateUserRequest;
 import org.hung.demo.dto.response.UserDetailResponse;
 import org.hung.demo.dto.response.UserListResponse;
+import org.hung.demo.dto.response.UserReportResponse;
 import org.hung.demo.rest.common.StandardResponse;
 import org.hung.demo.service.UserService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @RestController
@@ -24,6 +30,7 @@ public class UserController {
 
     @GetMapping("")
     public StandardResponse<List<UserListResponse>> getUserList(Pageable pageRequest) {
+        var user = SecurityUtils.getCurrentUserLogin();
         return userService.getUserList(pageRequest);
     }
 
@@ -42,5 +49,10 @@ public class UserController {
     public StandardResponse<String> deleteUser(@PathVariable  String username) {
         userService.deleteUser(username);
         return StandardResponse.success("SUCCESS");
+    }
+
+    @GetMapping("/report")
+    public StandardResponse<List<UserReportResponse>> reportUser() {
+        return StandardResponse.success(userService.reportUser());
     }
 }

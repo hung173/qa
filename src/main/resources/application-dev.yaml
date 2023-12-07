@@ -3,3 +3,5 @@ spring:
     url: jdbc:postgresql://localhost:5432/demo
     user: postgres
     password: hung
+  jpa:
+    show-sql: true

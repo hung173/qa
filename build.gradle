@@ -36,6 +36,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'org.springframework.security:spring-security-messaging'
 	implementation "jakarta.annotation:jakarta.annotation-api"
 	implementation "com.fasterxml.jackson.module:jackson-module-jaxb-annotations"
 	implementation "com.fasterxml.jackson.datatype:jackson-datatype-hibernate6"
@@ -58,6 +60,10 @@ dependencies {
 	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 
 	jooqGenerator 'org.postgresql:postgresql:42.5.1'
+
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+
 }
 
 tasks.named('test') {

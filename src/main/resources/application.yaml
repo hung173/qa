@@ -31,6 +31,23 @@ spring:
                 - "openid"
                 - "profile"
             require-authorization-consent: true
+      client:
+        registration:
+          my-client:
+            provider: okta
+            client-id: 1010929380870-llp91obovbn294d0sqposmr2cl8n4cor.apps.googleusercontent.com
+            client-secret: Uct_t-4RVtAT-EB5-Qf-WY4N
+            scope:
+              - openid
+              - profile
+              - email
+        provider:
+          okta:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
+            jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+            user-name-attribute: sub
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:postgresql://localhost:5432/demo
@@ -65,3 +82,9 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+
+application:
+  websocket:
+    endpoint: /ws
+    broker-topic-prefix: /server
+    client-topic-prefix: /client
